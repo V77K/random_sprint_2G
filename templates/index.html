@@ -1,1 +1,42 @@
-<!-- index.html будет добавлен отдельно -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Гонка</title>
+</head>
+<body>
+  <h1>Участники</h1>
+  <form action="/add" method="post">
+    <textarea name="names" rows="6" cols="30" placeholder="Фамилии..."></textarea><br>
+    <button type="submit">Добавить</button>
+  </form>
+  <a href="/clear">Очистить участников и группы</a> |
+  <a href="/archive">Добавить в архив</a>
+
+  <h2>Авторазбивка</h2>
+  <form action="/autogroup" method="post">
+    <label>Групп:</label>
+    <select name="num_groups">
+      <option>2</option><option>3</option><option>4</option>
+    </select>
+    <label>Этап:</label>
+    <select name="stage">
+      <option>Квалификация 1</option>
+      <option>Квалификация 2</option>
+      <option>Гонка 1</option>
+      <option>Гонка 2</option>
+    </select>
+    <button type="submit">Разбить</button>
+  </form>
+
+  <h2>Группы</h2>
+  {% for group, members in groups.items() %}
+    <h3>Группа {{ group }}</h3>
+    <ul>
+      {% for m in members %}
+        <li>#{{ m.number }} {{ m.name }}</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</body>
+</html>
