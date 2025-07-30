@@ -2,31 +2,42 @@
 <!doctype html>
 <html>
 <head>
-  <title>Группы и авторазбивка</title>
+  <title>Финальный Менеджер Гонок</title>
   <style>
     body { font-family: sans-serif; margin: 20px; }
-    .group-block { display: inline-block; vertical-align: top; margin-right: 20px; padding: 10px; border: 1px solid #ccc; width: 200px; }
+    .group-block { display: inline-block; vertical-align: top; margin: 10px; padding: 10px; border: 1px solid #ccc; width: 200px; }
+    textarea { width: 300px; height: 100px; }
+    select, button { margin-top: 5px; }
   </style>
 </head>
 <body>
-  <h1>Участники</h1>
+  <h1>Финальная Версия Менеджера</h1>
+
   <form method="post" action="/add">
-    <textarea name="names" placeholder="Фамилии по одной в строке" style="width:300px;height:100px;"></textarea><br>
+    <textarea name="names" placeholder="Фамилии построчно"></textarea><br>
     <button type="submit">Добавить участников</button>
   </form>
-  <a href="/clear">Очистить</a> | <a href="/archive">Архивировать</a>
-  <br><br>
-  <a href="/autogroup?num_groups=2">Авторазбить на 2 группы</a> |
-  <a href="/autogroup?num_groups=3">на 3 группы</a> |
-  <a href="/autogroup?num_groups=4">на 4 группы</a>
-  <h2>Список участников</h2>
-  <ul>
-    {% for p in participants %}
-      <li>{{ p }}</li>
-    {% endfor %}
-  </ul>
+  <a href="/clear">Очистить всех</a> | <a href="/archive">Архивировать</a>
 
-  <h2>Список групп</h2>
+  <h2>Авторазбивка</h2>
+  <form method="post" action="/autogroup">
+    <label>Кол-во групп:</label>
+    <select name="num_groups">
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+    <label>Этап:</label>
+    <select name="stage">
+      <option>Квалификация 1</option>
+      <option>Квалификация 2</option>
+      <option>Гонка 1</option>
+      <option>Гонка 2</option>
+    </select>
+    <button type="submit">Разбить</button>
+  </form>
+
+  <h2>Текущие группы</h2>
   {% for g, members in groups.items() %}
     <div class="group-block">
       <strong>Группа {{ g }}</strong>
