@@ -1,20 +1,31 @@
-
 <!doctype html>
 <html>
 <head>
-  <title>Участники</title>
+  <title>Гонка</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    textarea { width: 300px; height: 100px; }
+  </style>
 </head>
 <body>
-  <h1>Список участников</h1>
-  <form action="/add" method="post">
-    <input type="text" name="name" placeholder="Фамилия">
-    <button type="submit">Добавить</button>
+  <h1>Участники</h1>
+  <form method="post" action="/add">
+    <textarea name="names" placeholder="Вводи фамилии построчно"></textarea><br>
+    <button type="submit">Добавить участников</button>
   </form>
+  <a href="/clear">Очистить участников</a> | <a href="/archive">Сохранить в архив</a>
+  <h2>Текущий список</h2>
   <ul>
-    {% for name in participants %}
-      <li>{{ name }}</li>
+    {% for p in participants %}
+      <li>{{ p }}</li>
     {% endfor %}
   </ul>
-  <a href="/clear">Очистить список</a>
+
+  <h2>Архив</h2>
+  <ul>
+    {% for a in archive %}
+      <li>{{ a }}</li>
+    {% endfor %}
+  </ul>
 </body>
 </html>
