@@ -1,31 +1,63 @@
 <!doctype html>
 <html>
 <head>
-  <title>Гонка</title>
+  <title>Менеджер гонки</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
+    body { font-family: sans-serif; margin: 20px; }
     textarea { width: 300px; height: 100px; }
+    .group-list { display: flex; gap: 30px; margin-top: 20px; }
+    .group { border: 1px solid #ccc; padding: 10px; width: 150px; min-height: 100px; }
+    .participant { margin: 5px 0; padding: 5px; background: #eee; cursor: grab; }
+    select { margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>Участники</h1>
   <form method="post" action="/add">
-    <textarea name="names" placeholder="Вводи фамилии построчно"></textarea><br>
-    <button type="submit">Добавить участников</button>
+    <textarea name="names" placeholder="Фамилии по одной в строке"></textarea><br>
+    <button type="submit">Добавить</button>
   </form>
-  <a href="/clear">Очистить участников</a> | <a href="/archive">Сохранить в архив</a>
-  <h2>Текущий список</h2>
+  <a href="/clear">Очистить</a> | <a href="/archive">Архивировать</a>
+
+  <h2>Список</h2>
   <ul>
     {% for p in participants %}
-      <li>{{ p }}</li>
+      <li class="participant">{{ p }}</li>
     {% endfor %}
   </ul>
 
-  <h2>Архив</h2>
+  <h2>Архив участников</h2>
   <ul>
     {% for a in archive %}
       <li>{{ a }}</li>
     {% endfor %}
   </ul>
+
+  <h2>Ручное распределение (предпросмотр)</h2>
+  <div class="group-list">
+    <div class="group" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <strong>Группа A</strong>
+    </div>
+    <div class="group" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <strong>Группа B</strong>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.participant').forEach(p => {
+      p.draggable = true;
+      p.ondragstart = e => e.dataTransfer.setData("text", e.target.innerText);
+    });
+
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      const div = document.createElement("div");
+      div.innerText = data;
+      div.className = "participant";
+      ev.target.appendChild(div);
+    }
+  </script>
 </body>
 </html>
