@@ -68,3 +68,6 @@ def autogroup():
         result[group].append({"name": name, "number": idx+1})
     save_json(result, GROUPS_FILE)
     return redirect(url_for("index"))
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
