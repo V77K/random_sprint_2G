@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 DATA_FILE = "participants.json"
 ARCHIVE_FILE = "archive.json"
+GROUPS_FILE = "groups.json"
 
 def load_json(filename):
     if os.path.exists(filename):
@@ -23,7 +24,8 @@ def save_json(data, filename):
 def index():
     participants = load_json(DATA_FILE)
     archive = load_json(ARCHIVE_FILE)
-    return render_template("index.html", participants=participants, archive=archive)
+    groups = load_json(GROUPS_FILE)
+    return render_template("index.html", participants=participants, archive=archive, groups=groups)
 
 @app.route("/add", methods=["POST"])
 def add():
@@ -39,6 +41,7 @@ def add():
 @app.route("/clear")
 def clear():
     save_json([], DATA_FILE)
+    save_json({}, GROUPS_FILE)
     return redirect(url_for("index"))
 
 @app.route("/archive")
@@ -51,6 +54,17 @@ def archive():
     save_json(archive, ARCHIVE_FILE)
     return redirect(url_for("index"))
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+@app.route("/autogroup")
+def autogroup():
+    participants = load_json(DATA_FILE)
+    random.shuffle(participants)
+    num_groups = int(request.args.get("num_groups", 2))
+    group_labels = ["A", "B", "C", "D", "E", "F", "G", "H"]
+    result = {}
+    for i in range(num_groups):
+        result[group_labels[i]] = []
+    for idx, name in enumerate(participants):
+        group = group_labels[idx % num_groups]
+        result[group].append({"name": name, "number": idx+1})
+    save_json(result, GROUPS_FILE)
+    return redirect(url_for("index"))
