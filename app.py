@@ -122,3 +122,7 @@ def print_stage(stage):
     data = load_data()
     stage_data = data.get(stage, {})
     return render_template("print_stage.html", stage=stage, stage_data=stage_data)
+if __name__ == '__main__':
+    import os
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
